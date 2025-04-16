@@ -61,7 +61,7 @@ const authController = {
           secure: true, // Always use secure cookies in production
           sameSite: 'none', // Allow cross-site cookie
           maxAge: 60 * 60 * 1000, // 1 hour
-          domain: '.onrender.com' // Allow subdomains on render.com
+          // domain: '.onrender.com' // Allow subdomains on render.com
         });
 
         // Return the role along with the success message

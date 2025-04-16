@@ -3,7 +3,17 @@ require('dotenv').config();
 
 const authMiddleware = {
   verifyToken: (req, res, next) => {
-    const token = req.cookies.jwt; // Extract token from cookie
+    // First try to get token from cookie
+    let token = req.cookies.jwt;
+    
+    // If no cookie token, check Authorization header
+    if (!token) {
+      const authHeader = req.headers.authorization;
+      if (authHeader && authHeader.startsWith('Bearer ')) {
+        token = authHeader.split(' ')[1];
+      }
+    }
+    
     if (!token) {
       return res.status(401).json({ error: 'No token provided.' });
     }

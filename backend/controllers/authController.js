@@ -52,16 +52,15 @@ const authController = {
         const token = jwt.sign(
           { id: admin.id, username: admin.username, role: admin.role },
           process.env.JWT_SECRET,
-          { expiresIn: '1h' }
+          { expiresIn: '7h' }
         );
 
         // Set token in HTTP-only cookie
         res.cookie('jwt', token, {
           httpOnly: true,
-          secure: true, // Always use secure cookies in production
-          sameSite: 'none', // Allow cross-site cookie
-          maxAge: 60 * 60 * 1000, // 1 hour
-          // domain: '.onrender.com' // Allow subdomains on render.com
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'strict',
+          maxAge: 7 * 60 * 60 * 1000, // 7 hours
         });
 
         // Return the role along with the success message
@@ -84,7 +83,7 @@ const authController = {
         const token = jwt.sign(
           { id: hostel.hostel_id, username: hostel.username, role: 'receptionist', hostelType: hostel.hostel_type },
           process.env.JWT_SECRET,
-          { expiresIn: '1h' }
+          { expiresIn: '7h' }
         );
 
         // Set token in HTTP-only cookie
@@ -93,7 +92,7 @@ const authController = {
           secure: true, // Always use secure cookies in production
           sameSite: 'none', // Allow cross-site cookie
           maxAge: 60 * 60 * 1000, // 1 hour
-          domain: '.onrender.com' // Allow subdomains on render.com
+          // domain: '.onrender.com' // Allow subdomains on render.com
         });
 
         // Return the role along with the success message

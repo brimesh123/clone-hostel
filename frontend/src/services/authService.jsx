@@ -1,4 +1,4 @@
-// src/services/authService.jsx
+// src/services/authService.js
 import axios from 'axios';
 import config from '../config';
 
@@ -11,7 +11,7 @@ export const login = async (username, password) => {
       { username, password },
       { withCredentials: true } // Sends HTTPOnly cookies automatically
     );
-    return response.data; // Expected to include user details (e.g., role)
+    return response.data;
   } catch (error) {
     throw error.response ? error.response.data : error;
   }

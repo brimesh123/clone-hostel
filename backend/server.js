@@ -12,18 +12,33 @@ const studentRoutes = require('./routes/studentRoutes');
 const invoiceRoutes = require('./routes/invoiceRoutes');
 const dueRoutes = require('./routes/dueRoutes');
 
-
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Define allowed origins
+const allowedOrigins = process.env.NODE_ENV === 'production' 
+  ? ['https://clone-hostel.vercel.app']
+  : ['http://localhost:5173'];
+
 app.use(
   cors({
-    origin: true, // Allow all origins, will be restricted by Render's security
+    origin: function(origin, callback) {
+      // Allow requests with no origin (like mobile apps, curl requests)
+      if (!origin) return callback(null, true);
+      
+      if (allowedOrigins.indexOf(origin) === -1) {
+        return callback(null, true); // Temporarily allow all origins during development
+        // In production, you would return an error:
+        // return callback(new Error('Not allowed by CORS'), false);
+      }
+      return callback(null, true);
+    },
     credentials: true, // Allow cookies to be sent/received
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
   })
 );
+
 app.use(bodyParser.json());
 app.use(cookieParser()); // Enable cookie parsing
 
@@ -31,6 +46,8 @@ app.use(cookieParser()); // Enable cookie parsing
 app.use((req, res, next) => {
   console.log(`[DEBUG] ${req.method} ${req.url}`);
   console.log(`[DEBUG] Cookies: `, req.cookies);
+  console.log(`[DEBUG] Origin: `, req.headers.origin);
+  console.log(`[DEBUG] Authorization: `, req.headers.authorization);
   next();
 });
 

@@ -1,0 +1,26 @@
+hostel-management-backend/
+├── controllers/
+│   ├── authController.js        # Master Admin Authentication (Login/Register)
+│   ├── hostelController.js      # Hostel Management (Create Hostel & Assign Receptionist)
+│   ├── studentController.js     # Student Registration & Management
+│   ├── invoiceController.js     # Invoice & Fee Payment Management
+├── middlewares/
+│   ├── authMiddleware.js        # Protect routes with JWT authentication
+│   ├── errorHandler.js          # Global error handling middleware
+├── models/
+│   ├── adminModel.js            # Database queries for admin users
+│   ├── hostelModel.js           # Database queries for hostels
+│   ├── studentModel.js          # Database queries for students
+│   ├── invoiceModel.js          # Database queries for invoices/payments
+├── routes/
+│   ├── authRoutes.js            # Routes for authentication (Login/Register)
+│   ├── hostelRoutes.js          # Routes for hostel creation
+│   ├── studentRoutes.js         # Routes for student management
+│   ├── invoiceRoutes.js         # Routes for invoices & payments
+├── config/
+│   ├── db.js                    # MySQL Database connection
+│   ├── dotenvConfig.js           # Load environment variables
+├── .env                         # Environment variables (DB credentials, JWT secret)
+├── server.js                    # Main server file (Entry Point)
+├── package.json                 # Project dependencies
+└── README.md                    # Project Documentation

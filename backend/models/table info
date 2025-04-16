@@ -1,0 +1,98 @@
+-- Admins Table
+CREATE TABLE IF NOT EXISTS admins (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(50) UNIQUE NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  role ENUM('master', 'receptionist') NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-------------------------------------------------------------
+
+-- Hostels Table (updated)
+CREATE TABLE IF NOT EXISTS hostels (
+  hostel_id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  username VARCHAR(100) UNIQUE NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  fee_6_month DECIMAL(10,2) NOT NULL,
+  fee_12_month DECIMAL(10,2) NOT NULL,
+  hostel_type ENUM('boys', 'girls') NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+
+-------------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS students (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  roll_no BIGINT UNIQUE NOT NULL,      -- Roll Number as a numeric value
+  first_name VARCHAR(50) NOT NULL,
+  father_name VARCHAR(50),
+  surname VARCHAR(50),
+  address TEXT NOT NULL,
+  city VARCHAR(100) NOT NULL,           -- Added city column
+  aadhar BIGINT UNIQUE NOT NULL,        -- Aadhar as a numeric value
+  personal_phone BIGINT NOT NULL,       -- Phone number as a numeric value
+  parent_phone BIGINT NOT NULL,         -- Parent phone as a numeric value
+  college VARCHAR(100),
+  stream VARCHAR(50),
+  hostel_id INT NOT NULL,
+  admission_date DATE NOT NULL,         -- Changed from INT to DATE to include month and year
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (hostel_id) REFERENCES hostels(hostel_id) ON DELETE CASCADE
+);
+
+ALTER TABLE students ADD COLUMN due_date DATE NULL;
+
+----------------------------------------------------------------------
+
+
+-- Invoice Table Schema
+CREATE TABLE IF NOT EXISTS invoices (
+  invoice_id INT AUTO_INCREMENT PRIMARY KEY,
+  student_id INT NOT NULL,
+  invoice_date DATE NOT NULL,
+  amount DECIMAL(10,2) NOT NULL,
+  payment_period INT NOT NULL,  -- 6 or 12 months
+  payment_method ENUM('cheque', 'online') NOT NULL,
+  payment_details JSON NOT NULL,  -- Stores either cheque details or transaction details
+  notes TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE
+);
+
+ALTER TABLE invoices ADD COLUMN academic_stats VARCHAR(5) NULL;
+-- Index for faster queries
+CREATE INDEX idx_invoice_student ON invoices(student_id);
+CREATE INDEX idx_invoice_date ON invoices(invoice_date);
+
+
+
+-- Updation 
+
+-- Update students table to add status field
+ALTER TABLE students 
+ADD COLUMN status ENUM('active', 'left') NOT NULL DEFAULT 'active',
+ADD COLUMN left_date DATE NULL,
+ADD COLUMN academic_year VARCHAR(9) NOT NULL;
+
+-- Create index for faster filtering by status
+CREATE INDEX idx_student_status ON students(status);
+CREATE INDEX idx_student_academic_year ON students(academic_year);
+
+-- Create view for current academic year analytics
+CREATE OR REPLACE VIEW current_year_students AS
+SELECT * FROM students 
+WHERE academic_year = CONCAT(
+    CASE 
+        WHEN MONTH(CURDATE()) >= 6 THEN YEAR(CURDATE())
+        ELSE YEAR(CURDATE()) - 1
+    END,
+    '-',
+    CASE 
+        WHEN MONTH(CURDATE()) >= 6 THEN YEAR(CURDATE()) + 1
+        ELSE YEAR(CURDATE())
+    END
+);

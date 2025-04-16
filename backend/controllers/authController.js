@@ -58,9 +58,10 @@ const authController = {
         // Set token in HTTP-only cookie
         res.cookie('jwt', token, {
           httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
-          sameSite: 'strict',
+          secure: true, // Always use secure cookies in production
+          sameSite: 'none', // Allow cross-site cookie
           maxAge: 60 * 60 * 1000, // 1 hour
+          domain: '.onrender.com' // Allow subdomains on render.com
         });
 
         // Return the role along with the success message
@@ -89,9 +90,10 @@ const authController = {
         // Set token in HTTP-only cookie
         res.cookie('jwt', token, {
           httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
-          sameSite: 'strict',
+          secure: true, // Always use secure cookies in production
+          sameSite: 'none', // Allow cross-site cookie
           maxAge: 60 * 60 * 1000, // 1 hour
+          domain: '.onrender.com' // Allow subdomains on render.com
         });
 
         // Return the role along with the success message

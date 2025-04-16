@@ -18,8 +18,10 @@ const PORT = process.env.PORT || 5000;
 
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL, // Must match your frontend URL exactly
+    origin: true, // Allow all origins, will be restricted by Render's security
     credentials: true, // Allow cookies to be sent/received
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
   })
 );
 app.use(bodyParser.json());

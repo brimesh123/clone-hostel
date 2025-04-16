@@ -14,15 +14,30 @@ export const AuthProvider = ({ children }) => {
 
   // Login function that stores the user details in state and localStorage
   const login = async (username, password) => {
-    const result = await authService.login(username, password);
-    setUser(result);
-    localStorage.setItem('user', JSON.stringify(result));
-    return result;
+    try {
+      setIsLoading(true);
+      const result = await authService.login(username, password);
+      
+      // Store user info including the token
+      const userData = {
+        role: result.role,
+        username: username,
+        token: result.token
+      };
+      
+      setUser(userData);
+      localStorage.setItem('user', JSON.stringify(userData));
+      
+      return result;
+    } catch (error) {
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // Logout function that clears the user state and localStorage
   const logout = () => {
-    // If you have a logout endpoint, call it here (e.g., authService.logout())
     setUser(null);
     localStorage.removeItem('user');
   };

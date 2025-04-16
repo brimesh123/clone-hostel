@@ -58,14 +58,17 @@ const authController = {
         // Set token in HTTP-only cookie
         res.cookie('jwt', token, {
           httpOnly: true,
-          secure: true, // Always use secure cookies in production
-          sameSite: 'none', // Allow cross-site cookie
-          maxAge: 60 * 60 * 1000, // 1 hour
-          domain: '.onrender.com' // Allow subdomains on render.com
+          secure: process.env.NODE_ENV === 'production', // Only use secure in production
+          sameSite: 'none', // For cross-site cookies
+          maxAge: 60 * 60 * 1000 // 1 hour
         });
 
-        // Return the role along with the success message
-        return res.json({ message: 'Login successful', role: admin.role });
+        // Return the role and token along with the success message
+        return res.json({ 
+          message: 'Login successful', 
+          role: admin.role,
+          token: token // Include token in response body
+        });
       }
 
       // If not found in admins table, try the hostels table
@@ -90,14 +93,17 @@ const authController = {
         // Set token in HTTP-only cookie
         res.cookie('jwt', token, {
           httpOnly: true,
-          secure: true, // Always use secure cookies in production
-          sameSite: 'none', // Allow cross-site cookie
-          maxAge: 60 * 60 * 1000, // 1 hour
-          domain: '.onrender.com' // Allow subdomains on render.com
+          secure: process.env.NODE_ENV === 'production', // Only use secure in production
+          sameSite: 'none', // For cross-site cookies
+          maxAge: 60 * 60 * 1000 // 1 hour
         });
 
-        // Return the role along with the success message
-        return res.json({ message: 'Login successful', role: 'receptionist' });
+        // Return the role and token along with the success message
+        return res.json({ 
+          message: 'Login successful', 
+          role: 'receptionist',
+          token: token // Include token in response body
+        });
       }
 
       // If user not found in either table

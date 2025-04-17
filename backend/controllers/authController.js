@@ -83,7 +83,7 @@ const authController = {
         const token = jwt.sign(
           { id: hostel.hostel_id, username: hostel.username, role: 'receptionist', hostelType: hostel.hostel_type },
           process.env.JWT_SECRET,
-          { expiresIn: '7h' }
+          { expiresIn: '22h' }
         );
 
         // Set token in HTTP-only cookie
@@ -91,7 +91,7 @@ const authController = {
           httpOnly: true,
           secure: true, // Always use secure cookies in production
           sameSite: 'none', // Allow cross-site cookie
-          maxAge: 60 * 60 * 1000, // 1 hour
+          maxAge: 60 * 60 * 7000, // 1 hour
           // domain: '.onrender.com' // Allow subdomains on render.com
         });
 

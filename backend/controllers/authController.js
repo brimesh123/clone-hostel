@@ -58,7 +58,7 @@ const authController = {
         // Set token in HTTP-only cookie
         res.cookie('jwt', token, {
           httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
+          secure: true,
           sameSite: 'none',
           maxAge: 7 * 60 * 60 * 1000, // 7 hours
         });

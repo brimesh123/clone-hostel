@@ -81,7 +81,7 @@ const authController = {
 
         // Generate JWT token for hostel reception admin
         const token = jwt.sign(
-          { id: hostel.hostel_id, username: hostel.username, role: 'receptionist', hostelType: hostel.hostel_type },
+          { id: hostel.hostel_id, username: hostel.username,  hostelType: hostel.hostel_type },
           process.env.JWT_SECRET,
           { expiresIn: '22h' }
         );
